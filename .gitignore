@@ -1,0 +1,7 @@
+venv
+.idea
+_pycache_
+db.sqlite3
+/migrations/
+!*/migrations/_init_.py
+media
