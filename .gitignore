@@ -1,7 +1,7 @@
-venv
+env
 .idea
 _pycache_
 db.sqlite3
-/migrations/
+*/migrations/*
 !*/migrations/_init_.py
 media
