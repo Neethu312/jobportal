@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser,PermissionsMixin
 
 # Create your models here.
 
@@ -29,12 +29,13 @@ ROLE_CHOICE = [
 ]
 
 
-class CustomUser(AbstractBaseUser):
+class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(blank=True, null=True)
     is_active = models.BooleanField(default=True, verbose_name='active')
-    is_staff = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
     role = models.IntegerField(choices=ROLE_CHOICE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
