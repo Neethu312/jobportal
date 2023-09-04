@@ -1,7 +1,9 @@
 from rest_framework.views import APIView, Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from .serializers import *
+from django.contrib.auth import authenticate
 # Create your views here.
 
 
@@ -103,3 +105,54 @@ class ApplicantProfileView(APIView):
             }
         )
 
+
+class LoginView(APIView):
+
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        username = request.data.get('username')
+        password2 = request.data.get('password')
+        user = authenticate(username=username, password=password2)
+        if not user:
+            return Response(
+                {
+                    'success': False,
+                    'data': None,
+                    'message': 'Invalid username or password, Please try again',
+                    'errors': 'Invalid credentials'
+                },
+            )
+
+        token, created = Token.objects.get_or_create(user=user)
+        serializer = CustomUserSerializer(user)
+        serializer_data = serializer.data
+        serializer_data['token'] = token.key
+        return Response(
+            {
+                'success': True,
+                'data': serializer_data,
+                'message': 'Successfully logged in',
+                'errors': None
+            }
+        )
+
+
+class LogoutView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated, ]
+
+    def post(self, request):
+        try:
+            request.user.auth_token.delete()
+        except:
+            pass
+
+        return Response(
+            {
+                'success': True,
+                'data': None,
+                'message': 'User logged out successfully',
+                'errors': None
+            }
+        )

@@ -58,6 +58,9 @@ class CompanyProfile(models.Model):
     industry = models.CharField(max_length=100)
     hr_name = models.CharField(max_length=200)
 
+    def __str__(self):
+        return self.company_name
+
 
 class ApplicantProfile(models.Model):
     GENDER_CHOICES = [
@@ -89,3 +92,6 @@ class ApplicantProfile(models.Model):
     phone = models.CharField(max_length=12)
     work_status = models.CharField(max_length=100, choices=WORK_STATUS_CHOICES)
     Proof_of_citizenship = models.ImageField(upload_to='id_proof/')
+
+    def __str__(self):
+        return self.firstname
